@@ -1,0 +1,780 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "BaydenHub",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "BaydenHub Interface Suite",
+   LoadingSubtitle = "by GKori",
+   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "BaydenHub"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "BaydenHub Key",
+      Subtitle = "Key: 1234 (New Key System Soon!)",
+      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = false, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"1234"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("MainTab", 4483362458) -- Title, Image
+
+local Section = MainTab:CreateSection("Main Section")
+
+Rayfield:Notify({
+   Title = "BaydenHub Started",
+   Content = "BaydenHub",
+   Duration = 6.5,
+   Image = 4483362458,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Fly",
+   Callback = function()
+            print("Fly Started")
+            --- Configs
+local flybutton = "e"
+local flyspeed = 100
+local controls = {
+	front = "w",
+	back = "s",
+	right = "d",
+	left = "a",
+	up = " ",
+	down = "q"
+}
+-- Configs
+
+local player = game:GetService("Players").LocalPlayer
+local mouse = player:GetMouse()
+local runservice = game:GetService("RunService")
+
+local flycontrol = {F = 0, R = 0, B = 0, L = 0, U = 0, D = 0}
+local flying = false
+
+local function fly()
+	local character = player.Character
+	if not character then return end
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
+	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+	if not humanoid then return end
+	
+	flying = true
+	
+	local bv = Instance.new("BodyVelocity")
+	local bg = Instance.new("BodyGyro")
+	bv.MaxForce = Vector3.new(9e4, 9e4, 9e4)
+	bg.CFrame = hrp.CFrame
+	bg.MaxTorque = Vector3.new(9e4, 9e4, 9e4)
+	bg.P = 9e4
+	bv.Parent = hrp
+	bg.Parent = hrp
+	
+	for i, child in pairs(character:GetDescendants()) do
+		if child:IsA("BasePart") then
+			coroutine.wrap(function()
+				local con = nil
+				con = runservice.Stepped:Connect(function()
+					if not flying then
+						con:Disconnect()
+						child.CanCollide = true
+					end
+					child.CanCollide = false
+				end)
+			end)()
+		end
+	end
+	
+	local con = nil
+	con = runservice.Stepped:Connect(function()
+		if not flying then
+			con:Disconnect()
+			bv:Destroy()
+			bg:Destroy()
+		end
+		
+		humanoid.PlatformStand = true
+		bv.Velocity = (workspace.Camera.CoordinateFrame.LookVector * ((flycontrol.F - flycontrol.B) * flyspeed)) + (workspace.CurrentCamera.CoordinateFrame.RightVector * ((flycontrol.R - flycontrol.L) * flyspeed)) + (workspace.CurrentCamera.CoordinateFrame.UpVector * ((flycontrol.U - flycontrol.D) * flyspeed))
+		bg.CFrame = workspace.Camera.CoordinateFrame
+	end)
+	
+	repeat wait() until not flying
+	
+	while humanoid.PlatformStand == true do
+		humanoid.PlatformStand = false
+		task.wait()
+	end
+end
+
+mouse.KeyDown:Connect(function(key)
+	
+	if key:lower() == flybutton then
+		if flying then
+			flying = false
+		else
+			fly()
+		end
+	elseif key:lower() == controls.front then
+		flycontrol.F = 1
+	elseif key:lower() == controls.back then
+		flycontrol.B = 1
+	elseif key:lower() == controls.right then
+		flycontrol.R = 1
+	elseif key:lower() == controls.left then
+		flycontrol.L = 1
+	elseif key:lower() == controls.up then
+		flycontrol.U = 1
+	elseif key:lower() == controls.down then
+		flycontrol.D = 1
+	end
+end)
+
+mouse.KeyUp:Connect(function(key)
+	if key:lower() == controls.front then
+		flycontrol.F = 0
+	elseif key:lower() == controls.back then
+		flycontrol.B = 0
+	elseif key:lower() == controls.right then
+		flycontrol.R = 0
+	elseif key:lower() == controls.left then
+		flycontrol.L = 0
+	elseif key:lower() == controls.up then
+		flycontrol.U = 0
+	elseif key:lower() == controls.down then
+		flycontrol.D = 0
+	end
+end)
+
+player.CharacterAdded:Connect(function()
+	flying = false
+end)
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("Fly")
+
+local Button = MainTab:CreateButton({
+   Name = "ESP",
+   Callback = function()
+            local function API_Check()
+    if Drawing == nil then
+        return "No"
+    else
+        return "Yes"
+    end
+end
+
+local Find_Required = API_Check()
+
+if Find_Required == "No" then
+    game:GetService("StarterGui"):SetCore("SendNotification",{
+        Title = "Exunys Developer";
+        Text = "ESP script could not be loaded because your exploit is unsupported.";
+        Duration = math.huge;
+        Button1 = "OK"
+    })
+
+    return
+end
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Camera = workspace.CurrentCamera
+
+local Typing = false
+
+_G.SendNotifications = true   -- If set to true then the script would notify you frequently on any changes applied and when loaded / errored. (If a game can detect this, it is recommended to set it to false)
+_G.DefaultSettings = false   -- If set to true then the ESP script would run with default settings regardless of any changes you made.
+
+_G.TeamCheck = false   -- If set to true then the script would create ESP only for the enemy team members.
+
+_G.ESPVisible = true   -- If set to true then the ESP will be visible and vice versa.
+_G.TextColor = Color3.fromRGB(255, 80, 10)   -- The color that the boxes would appear as.
+_G.TextSize = 14   -- The size of the text.
+_G.Center = true   -- If set to true then the script would be located at the center of the label.
+_G.Outline = true   -- If set to true then the text would have an outline.
+_G.OutlineColor = Color3.fromRGB(0, 0, 0)   -- The outline color of the text.
+_G.TextTransparency = 0.7   -- The transparency of the text.
+_G.TextFont = Drawing.Fonts.UI   -- The font of the text. (UI, System, Plex, Monospace) 
+
+_G.DisableKey = Enum.KeyCode.Q   -- The key that disables / enables the ESP.
+
+local function CreateESP()
+    for _, v in next, Players:GetPlayers() do
+        if v.Name ~= Players.LocalPlayer.Name then
+            local ESP = Drawing.new("Text")
+
+            RunService.RenderStepped:Connect(function()
+                if workspace:FindFirstChild(v.Name) ~= nil and workspace[v.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
+                    local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[v.Name]:WaitForChild("Head", math.huge).Position)
+
+                    ESP.Size = _G.TextSize
+                    ESP.Center = _G.Center
+                    ESP.Outline = _G.Outline
+                    ESP.OutlineColor = _G.OutlineColor
+                    ESP.Color = _G.TextColor
+                    ESP.Transparency = _G.TextTransparency
+                    ESP.Font = _G.TextFont
+
+                    if OnScreen == true then
+                        local Part1 = workspace:WaitForChild(v.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position
+                        local Part2 = workspace:WaitForChild(Players.LocalPlayer.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position or 0
+                        local Dist = (Part1 - Part2).Magnitude
+                        ESP.Position = Vector2.new(Vector.X, Vector.Y - 25)
+                        ESP.Text = ("("..tostring(math.floor(tonumber(Dist)))..") "..v.Name.." ["..workspace[v.Name].Humanoid.Health.."]")
+                        if _G.TeamCheck == true then 
+                            if Players.LocalPlayer.Team ~= v.Team then
+                                ESP.Visible = _G.ESPVisible
+                            else
+                                ESP.Visible = false
+                            end
+                        else
+                            ESP.Visible = _G.ESPVisible
+                        end
+                    else
+                        ESP.Visible = false
+                    end
+                else
+                    ESP.Visible = false
+                end
+            end)
+
+            Players.PlayerRemoving:Connect(function()
+                ESP.Visible = false
+            end)
+        end
+    end
+
+    Players.PlayerAdded:Connect(function(Player)
+        Player.CharacterAdded:Connect(function(v)
+            if v.Name ~= Players.LocalPlayer.Name then 
+                local ESP = Drawing.new("Text")
+    
+                RunService.RenderStepped:Connect(function()
+                    if workspace:FindFirstChild(v.Name) ~= nil and workspace[v.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
+                        local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[v.Name]:WaitForChild("Head", math.huge).Position)
+    
+                        ESP.Size = _G.TextSize
+                        ESP.Center = _G.Center
+                        ESP.Outline = _G.Outline
+                        ESP.OutlineColor = _G.OutlineColor
+                        ESP.Color = _G.TextColor
+                        ESP.Transparency = _G.TextTransparency
+    
+                        if OnScreen == true then
+                            local Part1 = workspace:WaitForChild(v.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position
+                        local Part2 = workspace:WaitForChild(Players.LocalPlayer.Name, math.huge):WaitForChild("HumanoidRootPart", math.huge).Position or 0
+                            local Dist = (Part1 - Part2).Magnitude
+                            ESP.Position = Vector2.new(Vector.X, Vector.Y - 25)
+                            ESP.Text = ("("..tostring(math.floor(tonumber(Dist)))..") "..v.Name.." ["..workspace[v.Name].Humanoid.Health.."]")
+                            if _G.TeamCheck == true then 
+                                if Players.LocalPlayer.Team ~= Player.Team then
+                                    ESP.Visible = _G.ESPVisible
+                                else
+                                    ESP.Visible = false
+                                end
+                            else
+                                ESP.Visible = _G.ESPVisible
+                            end
+                        else
+                            ESP.Visible = false
+                        end
+                    else
+                        ESP.Visible = false
+                    end
+                end)
+    
+                Players.PlayerRemoving:Connect(function()
+                    ESP.Visible = false
+                end)
+            end
+        end)
+    end)
+end
+
+if _G.DefaultSettings == true then
+    _G.TeamCheck = false
+    _G.ESPVisible = true
+    _G.TextColor = Color3.fromRGB(40, 90, 255)
+    _G.TextSize = 14
+    _G.Center = true
+    _G.Outline = false
+    _G.OutlineColor = Color3.fromRGB(0, 0, 0)
+    _G.DisableKey = Enum.KeyCode.Q
+    _G.TextTransparency = 0.75
+end
+
+UserInputService.TextBoxFocused:Connect(function()
+    Typing = true
+end)
+
+UserInputService.TextBoxFocusReleased:Connect(function()
+    Typing = false
+end)
+
+UserInputService.InputBegan:Connect(function(Input)
+    if Input.KeyCode == _G.DisableKey and Typing == false then
+        _G.ESPVisible = not _G.ESPVisible
+        
+        if _G.SendNotifications == true then
+            game:GetService("StarterGui"):SetCore("SendNotification",{
+                Title = "Bayden Developer";
+                Text = "The ESP's visibility is now set to "..tostring(_G.ESPVisible)..".";
+                Duration = 5;
+            })
+        end
+    end
+end)
+
+local Success, Errored = pcall(function()
+    CreateESP()
+end)
+
+if Success and not Errored then
+    if _G.SendNotifications == true then
+        game:GetService("StarterGui"):SetCore("SendNotification",{
+            Title = "Bayden Developer";
+            Text = "ESP script has successfully loaded.";
+            Duration = 5;
+        })
+    end
+elseif Errored and not Success then
+    if _G.SendNotifications == true then
+        game:GetService("StarterGui"):SetCore("SendNotification",{
+            Title = "Bayden Developer";
+            Text = "ESP script has errored while loading, please check the developer console! (F9)";
+            Duration = 5;
+        })
+    end
+    TestService:Message("The ESP script has errored, please notify BaydenHub with the following information :")
+    warn(Errored)
+    print("!! IF THE ERROR IS A FALSE POSITIVE (says that a player cannot be found) THEN DO NOT BOTHER !!")
+end
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("ESP")
+
+local Button = MainTab:CreateButton({
+   Name = "Aimbot",
+   Callback = function()
+            local Camera = workspace.CurrentCamera
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Holding = false
+
+_G.AimbotEnabled = true
+_G.TeamCheck = false -- If set to true then the script would only lock your aim at enemy team members.
+_G.AimPart = "Head" -- Where the aimbot script would lock at.
+_G.Sensitivity = 0 -- How many seconds it takes for the aimbot script to officially lock onto the target's aimpart.
+
+_G.CircleSides = 64 -- How many sides the FOV circle would have.
+_G.CircleColor = Color3.fromRGB(255, 255, 255) -- (RGB) Color that the FOV circle would appear as.
+_G.CircleTransparency = 0.7 -- Transparency of the circle.
+_G.CircleRadius = 80 -- The radius of the circle / FOV.
+_G.CircleFilled = false -- Determines whether or not the circle is filled.
+_G.CircleVisible = true -- Determines whether or not the circle is visible.
+_G.CircleThickness = 0 -- The thickness of the circle.
+
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+FOVCircle.Radius = _G.CircleRadius
+FOVCircle.Filled = _G.CircleFilled
+FOVCircle.Color = _G.CircleColor
+FOVCircle.Visible = _G.CircleVisible
+FOVCircle.Radius = _G.CircleRadius
+FOVCircle.Transparency = _G.CircleTransparency
+FOVCircle.NumSides = _G.CircleSides
+FOVCircle.Thickness = _G.CircleThickness
+
+local function GetClosestPlayer()
+	local MaximumDistance = _G.CircleRadius
+	local Target = nil
+
+	for _, v in next, Players:GetPlayers() do
+		if v.Name ~= LocalPlayer.Name then
+			if _G.TeamCheck == true then
+				if v.Team ~= LocalPlayer.Team then
+					if v.Character ~= nil then
+						if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+							if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
+								local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
+								local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
+								
+								if VectorDistance < MaximumDistance then
+									Target = v
+								end
+							end
+						end
+					end
+				end
+			else
+				if v.Character ~= nil then
+					if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+						if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
+							local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
+							local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
+							
+							if VectorDistance < MaximumDistance then
+								Target = v
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return Target
+end
+
+UserInputService.InputBegan:Connect(function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+        Holding = true
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+        Holding = false
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    FOVCircle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+    FOVCircle.Radius = _G.CircleRadius
+    FOVCircle.Filled = _G.CircleFilled
+    FOVCircle.Color = _G.CircleColor
+    FOVCircle.Visible = _G.CircleVisible
+    FOVCircle.Radius = _G.CircleRadius
+    FOVCircle.Transparency = _G.CircleTransparency
+    FOVCircle.NumSides = _G.CircleSides
+    FOVCircle.Thickness = _G.CircleThickness
+
+    if Holding == true and _G.AimbotEnabled == true then
+        TweenService:Create(Camera, TweenInfo.new(_G.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, GetClosestPlayer().Character[_G.AimPart].Position)}):Play()
+    end
+end)
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("Aimbot")
+
+local Button = MainTab:CreateButton({
+   Name = "Car Fly",
+   Callback = function()
+            local FlyKey = Enum.KeyCode.V
+        local SpeedKey = Enum.KeyCode.LeftControl
+        
+        local SpeedKeyMultiplier = 3
+        local FlightSpeed = 256
+        local FlightAcceleration = 4
+        local TurnSpeed = 16
+        
+        -- made by zach
+        
+        -- enjoy :3
+        
+        local UserInputService = game:GetService("UserInputService")
+        local StarterGui = game:GetService("StarterGui")
+        local RunService = game:GetService("RunService")
+        local Players = game:GetService("Players")
+        local User = Players.LocalPlayer
+        local Camera = workspace.CurrentCamera
+        local UserCharacter = nil
+        local UserRootPart = nil
+        local Connection = nil
+        
+        
+        workspace.Changed:Connect(function()
+            Camera = workspace.CurrentCamera
+        end)
+        
+        local setCharacter = function(c)
+            UserCharacter = c
+            UserRootPart = c:WaitForChild("HumanoidRootPart")
+        end
+        
+        User.CharacterAdded:Connect(setCharacter)
+        if User.Character then
+            setCharacter(User.Character)
+        end
+        
+        local CurrentVelocity = Vector3.new(0,0,0)
+        local Flight = function(delta)
+            local BaseVelocity = Vector3.new(0,0,0)
+            if not UserInputService:GetFocusedTextBox() then
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+                    BaseVelocity = BaseVelocity + (Camera.CFrame.LookVector * FlightSpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+                    BaseVelocity = BaseVelocity - (Camera.CFrame.RightVector * FlightSpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+                    BaseVelocity = BaseVelocity - (Camera.CFrame.LookVector * FlightSpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+                    BaseVelocity = BaseVelocity + (Camera.CFrame.RightVector * FlightSpeed)
+                end
+                if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+                    BaseVelocity = BaseVelocity + (Camera.CFrame.UpVector * FlightSpeed)
+                end
+                if UserInputService:IsKeyDown(SpeedKey) then
+                    BaseVelocity = BaseVelocity * SpeedKeyMultiplier
+                end
+            end
+            if UserRootPart then
+                local car = UserRootPart:GetRootPart()
+                if car.Anchored then return end
+                if not isnetworkowner(car) then return end
+                CurrentVelocity = CurrentVelocity:Lerp(
+                    BaseVelocity,
+                    math.clamp(delta * FlightAcceleration, 0, 1)
+                )
+                car.Velocity = CurrentVelocity + Vector3.new(0,2,0)
+                if car ~= UserRootPart then
+                    car.RotVelocity = Vector3.new(0,0,0)
+                    car.CFrame = car.CFrame:Lerp(CFrame.lookAt(
+                        car.Position,
+                        car.Position + CurrentVelocity + Camera.CFrame.LookVector
+                    ), math.clamp(delta * TurnSpeed, 0, 1))
+                end
+            end
+        end
+        
+        UserInputService.InputBegan:Connect(function(userInput,gameProcessed)
+            if gameProcessed then return end
+            if userInput.KeyCode == FlyKey then
+                if Connection then
+                    StarterGui:SetCore("SendNotification",{
+                        Title = "Bayden car fly",
+                        Text = "Flight disabled"
+                    })
+                    Connection:Disconnect()
+                    Connection = nil
+                else
+                    StarterGui:SetCore("SendNotification",{
+                        Title = "Bayden car fly",
+                        Text = "Flight enabled"
+                    })
+                    CurrentVelocity = UserRootPart.Velocity
+                    Connection = RunService.Heartbeat:Connect(Flight)
+                end
+            end
+        end)
+        
+        StarterGui:SetCore("SendNotification",{
+            Title = "Bayden car fly",
+            Text = "Loaded successfully, Press V to toggle"
+        })
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("Car Fly")
+
+local Button = MainTab:CreateButton({
+   Name = "r64",
+   Callback = function()
+            local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Imposter = Instance.new("TextButton")
+local Roblox = Instance.new("TextButton")
+local Wario = Instance.new("TextButton")
+local Knoddy = Instance.new("TextButton")
+--Properties:
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.new(1, 1, 1)
+Frame.Position = UDim2.new(-0.000744581223, 0, 0, 0)
+Frame.Size = UDim2.new(0, 100, 0, 100)
+
+Imposter.Name = "Imposter"
+Imposter.Parent = Frame
+Imposter.BackgroundColor3 = Color3.new(1, 1, 1)
+Imposter.Position = UDim2.new(1.14440915e-07, 0, 0, 0)
+Imposter.Size = UDim2.new(0, 99, 0, 25)
+Imposter.Font = Enum.Font.SourceSans
+Imposter.Text = "Imposter"
+Imposter.TextColor3 = Color3.new(0, 0, 0)
+Imposter.TextSize = 14
+
+Roblox.Name = "Roblox"
+Roblox.Parent = Frame
+Roblox.BackgroundColor3 = Color3.new(1, 1, 1)
+Roblox.Position = UDim2.new(1.14440915e-07, 0, 0.25, 0)
+Roblox.Size = UDim2.new(0, 99, 0, 25)
+Roblox.Font = Enum.Font.SourceSans
+Roblox.Text = "Roblox"
+Roblox.TextColor3 = Color3.new(0, 0, 0)
+Roblox.TextSize = 14
+
+Wario.Name = "Wario"
+Wario.Parent = Frame
+Wario.BackgroundColor3 = Color3.new(1, 1, 1)
+Wario.Position = UDim2.new(1.13621354e-07, 0, 0.5, 0)
+Wario.Size = UDim2.new(0, 99, 0, 25)
+Wario.Font = Enum.Font.SourceSans
+Wario.Text = "Wario"
+Wario.TextColor3 = Color3.new(0, 0, 0)
+Wario.TextSize = 14
+
+Knoddy.Name = "Knoddy"
+Knoddy.Parent = Frame
+Knoddy.BackgroundColor3 = Color3.new(1, 1, 1)
+Knoddy.Position = UDim2.new(1.13621354e-07, 0, 0.75, 0)
+Knoddy.Size = UDim2.new(0, 99, 0, 25)
+Knoddy.Font = Enum.Font.SourceSans
+Knoddy.Text = "Knoddy"
+Knoddy.TextColor3 = Color3.new(0, 0, 0)
+Knoddy.TextSize = 14
+-- Scripts:
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rekitrelt/R64-scripts/main/Misc/Tele%20Health.lua", true))()
+
+
+local plr = game.Players.LocalPlayer;
+mouse = plr:GetMouse ();
+
+function onPress(key)
+if  key:lower () == "l" then
+if Frame.BackgroundTransparency == 1 then
+        Frame.BackgroundTransparency = 0
+        Imposter.BackgroundTransparency = 0
+        Roblox.BackgroundTransparency = 0
+        Wario.BackgroundTransparency = 0
+        Knoddy.BackgroundTransparency = 0
+
+        Imposter.Text = "Imposter"
+        Roblox.Text = "Roblox"
+        Wario.Text = "Wario"
+        Knoddy.Text = "Knoddy"
+    elseif Frame.BackgroundTransparency == 0 then
+        Frame.BackgroundTransparency = 1
+        Imposter.BackgroundTransparency = 1
+        Roblox.BackgroundTransparency = 1
+        Wario.BackgroundTransparency = 1
+        Knoddy.BackgroundTransparency = 1
+
+        Imposter.Text = ""
+        Roblox.Text = ""
+        Wario.Text = ""
+        Knoddy.Text = ""
+    end
+end
+end
+
+mouse.KeyDown:connect(onPress)
+
+Imposter.MouseButton1Click:Connect(function()
+    if workspace.char:FindFirstChild("vis2") then
+			workspace.char.vis2:Destroy()
+		elseif workspace.char:FindFirstChild("wario") then
+		    workspace.char.wario:Destroy()
+	end
+	wait(1)
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/rekitrelt/R64-scripts/main/Custom%20Avatars/GUI/avatars/imposter.lua", true))()
+end)
+Roblox.MouseButton1Click:Connect(function()
+		if workspace.char:FindFirstChild("vis2") then
+			workspace.char.vis2:Destroy()
+		elseif workspace.char:FindFirstChild("wario") then
+		    workspace.char.wario:Destroy()
+		end
+	wait(1)
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/rekitrelt/R64-scripts/main/Custom%20Avatars/GUI/avatars/roblox.lua", true))()
+end)
+Wario.MouseButton1Click:Connect(function()
+		if workspace.char:FindFirstChild("vis2") then
+			workspace.char.vis2:Destroy()
+		elseif workspace.char:FindFirstChild("wario") then
+		    workspace.char.wario:Destroy()
+		end
+	wait(1)
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/rekitrelt/R64-scripts/main/Custom%20Avatars/GUI/avatars/wario.lua", true))()
+end)
+Knoddy.MouseButton1Click:Connect(function()
+		if workspace.char:FindFirstChild("vis2") then
+			workspace.char.vis2:Destroy()
+		elseif workspace.char:FindFirstChild("wario") then
+		    workspace.char.wario:Destroy()
+		end
+	wait(1)
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/rekitrelt/R64-scripts/main/Custom%20Avatars/GUI/avatars/knoddy.lua", true))()
+end)
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("r64")
+
+local Button = MainTab:CreateButton({
+   Name = "Blox Fruit Hub",
+   Callback = function()
+           -- local Settings = {
+  --JoinTeam = "Pirates"; -- Pirates/Marines
+ -- Translator = true; -- true/false
+--}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/newredz/BloxFruits/refs/heads/main/Source.luau"))(Settings)
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("Blox Fruit Hub")
+
+local Button = MainTab:CreateButton({
+   Name = "Zypherion",
+   Callback = function()
+            loadstring(game:HttpGet(('https://raw.githubusercontent.com/blackowl1231/ZYPHERION/refs/heads/main/main.lua')))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("Zypherion")
+
+local Button = MainTab:CreateButton({
+   Name = "Emergency Hamburg",
+   Callback = function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/nova7q/nova/refs/heads/main/nova"))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("Emergency Hamburg")
+
+local Button = MainTab:CreateButton({
+   Name = "Solara Hub V3",
+   Callback = function()
+            loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Solara-Hub-Keyless-195-Games-20988"))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+Button:Set("Solara Hub V3")
