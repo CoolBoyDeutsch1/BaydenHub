@@ -789,7 +789,7 @@ local Button = MainTab:CreateButton({
 
 Button:Set("Ghost Hub")
 
-local Button = Tab:CreateButton({
+local Button = MainTab:CreateButton({
    Name = "Infinite Yield",
    Callback = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
@@ -799,7 +799,7 @@ local Button = Tab:CreateButton({
 
 Button:Set("Infinite Yield")
 
-local Button = Tab:CreateButton({
+local Button = MainTab:CreateButton({
    Name = "DEX",
    Callback = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
