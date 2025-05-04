@@ -34,7 +34,9 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local MainTab = Window:CreateTab("MainTab", 4483362458) -- Title, Image
+local FlyTab = Window:CreateTab("Fly Tab", 4483362458) -- Title, Image
+local VisualsTab = Window:CreateTab("Visuals Tab", 4483362458) -- Title, Image
+local HubsTab = Window:CreateTab("Hubs Tab", 4483362458) -- Title, Image
 
 local Section = MainTab:CreateSection("Main Section")
 
@@ -45,7 +47,7 @@ Rayfield:Notify({
    Image = 4483362458,
 })
 
-local Button = MainTab:CreateButton({
+local Button = FlyTab:CreateButton({
    Name = "Fly",
    Callback = function()
             print("Fly Started")
@@ -172,7 +174,7 @@ end)
 
 Button:Set("Fly")
 
-local Button = MainTab:CreateButton({
+local Button = VisualsTab:CreateButton({
    Name = "ESP",
    Callback = function()
             local function API_Check()
@@ -376,7 +378,7 @@ end
 
 Button:Set("ESP")
 
-local Button = MainTab:CreateButton({
+local Button = VisualsTab:CreateButton({
    Name = "Aimbot",
    Callback = function()
             local Camera = workspace.CurrentCamera
@@ -485,7 +487,7 @@ end)
 
 Button:Set("Aimbot")
 
-local Button = MainTab:CreateButton({
+local Button = FlyTab:CreateButton({
    Name = "Car Fly",
    Callback = function()
             local FlyKey = Enum.KeyCode.V
@@ -598,7 +600,7 @@ local Button = MainTab:CreateButton({
 
 Button:Set("Car Fly")
 
-local Button = MainTab:CreateButton({
+local Button = VisualsTab:CreateButton({
    Name = "r64",
    Callback = function()
             local ScreenGui = Instance.new("ScreenGui")
@@ -735,7 +737,7 @@ end)
 
 Button:Set("r64")
 
-local Button = MainTab:CreateButton({
+local Button = HubsTab:CreateButton({
    Name = "Blox Fruit Hub",
    Callback = function()
            -- local Settings = {
@@ -749,7 +751,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/newredz/BloxFruits/re
 
 Button:Set("Blox Fruit Hub")
 
-local Button = MainTab:CreateButton({
+local Button = HubsTab:CreateButton({
    Name = "Zypherion",
    Callback = function()
             loadstring(game:HttpGet(('https://raw.githubusercontent.com/blackowl1231/ZYPHERION/refs/heads/main/main.lua')))()
@@ -759,7 +761,7 @@ local Button = MainTab:CreateButton({
 
 Button:Set("Zypherion")
 
-local Button = MainTab:CreateButton({
+local Button = HubsTab:CreateButton({
    Name = "Emergency Hamburg",
    Callback = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/nova7q/nova/refs/heads/main/nova"))()
@@ -769,7 +771,7 @@ local Button = MainTab:CreateButton({
 
 Button:Set("Emergency Hamburg")
 
-local Button = MainTab:CreateButton({
+local Button = HubsTab:CreateButton({
    Name = "Solara Hub V3",
    Callback = function()
             loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Solara-Hub-Keyless-195-Games-20988"))()
@@ -779,7 +781,7 @@ local Button = MainTab:CreateButton({
 
 Button:Set("Solara Hub V3")
 
-local Button = MainTab:CreateButton({
+local Button = HubsTab:CreateButton({
    Name = "Ghost Hub",
    Callback = function()
             loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub'))()
@@ -789,7 +791,7 @@ local Button = MainTab:CreateButton({
 
 Button:Set("Ghost Hub")
 
-local Button = MainTab:CreateButton({
+local Button = HubsTab:CreateButton({
    Name = "Infinite Yield",
    Callback = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
@@ -799,7 +801,7 @@ local Button = MainTab:CreateButton({
 
 Button:Set("Infinite Yield")
 
-local Button = MainTab:CreateButton({
+local Button = HubsTab:CreateButton({
    Name = "DEX",
    Callback = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
