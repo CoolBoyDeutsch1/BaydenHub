@@ -38,7 +38,9 @@ local FlyTab = Window:CreateTab("Fly Tab", 4483362458) -- Title, Image
 local VisualsTab = Window:CreateTab("Visuals Tab", 4483362458) -- Title, Image
 local HubsTab = Window:CreateTab("Hubs Tab", 4483362458) -- Title, Image
 
-local Section = MainTab:CreateSection("Main Section")
+local FlySection = FlyTab:CreateSection("Fly Section")
+local VisualsSection = VisualsTab:CreateSection("Visuals Section")
+local HubsSection = HubsTab:CreateSection("Hubs Section")
 
 Rayfield:Notify({
    Title = "BaydenHub Started",
